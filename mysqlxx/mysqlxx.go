@@ -20,9 +20,8 @@ type Place struct {
 	TelCode int    `db:"telcode"`
 }
 
-var Db2 *sqlx.DB
+var Db *sqlx.DB
 
-/*
 func init() {
 	database, err := sqlx.Open("mysql", "root:root1234@tcp(127.0.0.1:3306)/test")
 	if err != nil {
@@ -30,15 +29,14 @@ func init() {
 		return
 	}
 	Db = database
-	defer Db.Close() // 注意这行代码要写在上面err判断的下面
+	//defer Db.Close() // 注意这行代码要写在上面err判断的下面
 }
-*/
 
 func Test_mysql() {
-	if Db2 == nil {
+	if Db == nil {
 		fmt.Println("Db is nil")
 	}
-	r, err := Db2.Exec("insert into person(username, sex, email)values(?, ?, ?)", "stu001", "man", "stu01@qq.com")
+	r, err := Db.Exec("insert into person(username, sex, email)values(?, ?, ?)", "stu001", "man", "stu01@qq.com")
 	if err != nil {
 		fmt.Println("exec failed, ", err)
 		return

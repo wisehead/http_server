@@ -7,21 +7,11 @@ import (
 	"http_server/mysqlxx"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-var Db *sqlx.DB
+//var Db *sqlx.DB
 
-func init() {
-	database, err := sqlx.Open("mysql", "root:root1234@tcp(127.0.0.1:3306)/test")
-	if err != nil {
-		fmt.Println("open mysql failed,", err)
-		return
-	}
-	Db = database
-	//defer Db.Close() // 注意这行代码要写在上面err判断的下面
-}
-
+/*
 func test_db() {
 	if Db == nil {
 		fmt.Println("Db is nil")
@@ -39,6 +29,7 @@ func test_db() {
 
 	fmt.Println("insert succ:", id)
 }
+*/
 
 func main() {
 	// 1.创建路由
@@ -51,6 +42,8 @@ func main() {
 	r.GET("/xxxpost", myget)
 	r.POST("/xxxpost", mypost)
 	r.PUT("/xxxput", myget)
+
+	defer mysqlxx.Db.Close() // 注意这行代码要写在上面err判断的下面
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	r.Run(":8000")
@@ -67,5 +60,6 @@ func myget(c *gin.Context) {
 func mypost(c *gin.Context) {
 	fmt.Println("-------in func myPOST()-------")
 	c.String(http.StatusOK, "-------in func myPOST()-------")
-	test_db()
+	//test_db()
+	mysqlxx.Test_mysql()
 }
