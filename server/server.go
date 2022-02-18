@@ -4,32 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"http_server/esxx"
 	"http_server/mysqlxx"
 
 	"github.com/gin-gonic/gin"
 )
-
-//var Db *sqlx.DB
-
-/*
-func test_db() {
-	if Db == nil {
-		fmt.Println("Db is nil")
-	}
-	r, err := Db.Exec("insert into person(username, sex, email)values(?, ?, ?)", "stu001", "man", "stu01@qq.com")
-	if err != nil {
-		fmt.Println("exec failed, ", err)
-		return
-	}
-	id, err := r.LastInsertId()
-	if err != nil {
-		fmt.Println("exec failed, ", err)
-		return
-	}
-
-	fmt.Println("insert succ:", id)
-}
-*/
 
 func main() {
 	// 1.创建路由
@@ -61,5 +40,6 @@ func mypost(c *gin.Context) {
 	fmt.Println("-------in func myPOST()-------")
 	c.String(http.StatusOK, "-------in func myPOST()-------")
 	//test_db()
-	mysqlxx.Test_mysql()
+	//mysqlxx.Test_mysql()
+	esxx.Test_es()
 }
