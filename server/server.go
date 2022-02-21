@@ -22,6 +22,7 @@ func main() {
 	r.POST("/xxxpost", mypost)
 	r.PUT("/xxxput", myget)
 	r.GET("/search", mysearch)
+	r.GET("/test", mytest)
 
 	defer mysqlxx.Db.Close() // 注意这行代码要写在上面err判断的下面
 	// 3.监听端口，默认在8080
@@ -52,4 +53,13 @@ func mysearch(c *gin.Context) {
 	//test_db()
 	//mysqlxx.Test_mysql()
 	esxx.Es_search()
+}
+
+// createTodo add a new todo
+func mytest(c *gin.Context) {
+	fmt.Println("-------in func mytest()-------")
+	c.String(http.StatusOK, "-------in func mytest()-------")
+	//test_db()
+	//mysqlxx.Test_mysql()
+	esxx.Es_test()
 }
