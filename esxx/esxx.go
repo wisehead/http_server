@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"time"
 
 	"github.com/olivere/elastic/v7"
 )
@@ -17,66 +16,28 @@ type Person struct {
 	Married bool   `json:"married"`
 }
 
-/*
 type Zhb_search_online_db_Item struct {
-	Id     string `json:"id"`
-	DataId string `json:"dataId"`
-
-	Item string `json:"item"`
-
-	SourceUrl string `json:"sourceUrl"`
-
-	Category string `json:"title"`
-
-	Title string `json:"title"`
-
-	Content string `json:"content"`
-
-	Author string `json:"author"`
-
-	CreateTime string `json:"createTime"`
-
-	DataType string `json:"dataType"`
-
-	PublishedTime string `json:"publishedTime"`
-
-	Summary string `json:"summary"`
-
-	Ext string `json:"ext"`
-
-	ClassifyName string `json:"classifyName"`
-
-	ClassifyDesc string `json:"classifyDesc"`
-
-	Description string `json:"description"`
-
-	Detail string `json:"detail"`
-
-	NCode string `json:"nCode"`
-
-	Photo string `json:"photo"`
-}
-*/
-type Zhb_search_online_db_Item struct {
-	DataID        int       `json:"dataId,omitempty"`
-	Author        string    `json:"author,omitempty"`
-	Category      string    `json:"category,omitempty"`
-	Content       string    `json:"content,omitempty"`
-	CreateTime    time.Time `json:"createTime,omitempty"`
-	DataType      string    `json:"dataType,omitempty"`
-	Item          string    `json:"item,omitempty"`
-	Ext           string    `json:"ext,omitempty"`
-	ID            int       `json:"id,omitempty"`
-	PublishedTime time.Time `json:"publishedTime,omitempty"`
-	SourceURL     string    `json:"sourceUrl,omitempty"`
-	Summary       string    `json:"summary,omitempty"`
-	Title         string    `json:"title,omitempty"`
-	Photo         string    `json:"photo,omitempty"`
-	Detail        string    `json:"detail,omitempty"`
-	Description   string    `json:"description,omitempty"`
-	ClassifyName  string    `json:"classifyName,omitempty"`
-	ClassifyDesc  string    `json:"classifyDesc,omitempty"`
-	NCode         string    `json:"nCode,omitempty"`
+	DataID        string `json:"-"` //`json:"dataId,omitempty"`
+	Author        string `json:"author,omitempty"`
+	Category      string `json:"category,omitempty"`
+	Content       string `json:"content,omitempty"`
+	CreateTime    string `json:"createTime,omitempty"` //time.Time
+	DataType      string `json:"dataType,omitempty"`
+	Item          string `json:"item,omitempty"`
+	Ext           string `json:"ext,omitempty"`
+	ID            string `json:"-"`                       //`json:"id,omitempty"`
+	PublishedTime string `json:"publishedTime,omitempty"` //time.Time
+	SourceURL     string `json:"sourceUrl,omitempty"`
+	Summary       string `json:"summary,omitempty"`
+	Title         string `json:"title,omitempty"`
+	Photo         string `json:"photo,omitempty"`
+	Detail        string `json:"detail,omitempty"`
+	Description   string `json:"description,omitempty"`
+	ClassifyName  string `json:"classifyName,omitempty"`
+	ClassifyDesc  string `json:"classifyDesc,omitempty"`
+	NCode         string `json:"nCode,omitempty"`
+	RedirectUrl   string `json:"redirectUrl,omitempty"`
+	Class         string `json:"_class,omitempty"`
 }
 
 /*
@@ -130,11 +91,11 @@ func Es_search() {
 	searchResult, err := client.Search().
 		Index("zhb_search_online_db"). // 设置索引名
 		//Query(termQuery).              // 设置查询条件
-		Sort("createTime", true). // 设置排序字段，根据Created字段升序排序，第二个参数false表示逆序
-		From(0).                  // 设置分页参数 - 起始偏移量，从第0行记录开始
-		Size(10).                 // 设置分页参数 - 每页大小
-		Pretty(true).             // 查询结果返回可读性较好的JSON格式
-		Do(ctx)                   // 执行请求
+		//Sort("createTime", true). // 设置排序字段，根据Created字段升序排序，第二个参数false表示逆序
+		From(0).      // 设置分页参数 - 起始偏移量，从第0行记录开始
+		Size(100).    // 设置分页参数 - 每页大小
+		Pretty(true). // 查询结果返回可读性较好的JSON格式
+		Do(ctx)       // 执行请求
 
 	if err != nil {
 		// Handle error
@@ -142,7 +103,7 @@ func Es_search() {
 	}
 
 	fmt.Printf("查询消耗时间 %d ms, 结果总数: %d\n", searchResult.TookInMillis, searchResult.TotalHits())
-	fmt.Println(searchResult)
+	//fmt.Println(searchResult)
 
 	if searchResult.TotalHits() > 0 {
 		// 查询结果不为空，则遍历结果
@@ -157,7 +118,10 @@ func Es_search() {
 				}
 			*/
 			t, _ := item.(Zhb_search_online_db_Item)
-			fmt.Println(t.ID)
+			fmt.Println("===============================================")
+			//fmt.Println(item)
+			fmt.Printf("NCode %s, Title: %s\n", t.NCode, t.Title)
+			//fmt.Println(t.NCode)
 		}
 	}
 
