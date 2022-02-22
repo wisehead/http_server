@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
-	"http_server/esxx"
 	"http_server/handler"
 	"http_server/mysqlxx"
 
@@ -19,39 +17,14 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "hello World!")
 	})
-	r.GET("/xxxpost", myget)
-	r.POST("/xxxpost", mypost)
-	r.PUT("/xxxput", myget)
+	r.GET("/xxxpost", handler.MyGet)
+	r.POST("/xxxpost", handler.MyPost)
+	r.PUT("/xxxput", handler.MyGet)
 	r.GET("/search", handler.MySearch)
-	r.GET("/test", mytest)
+	r.GET("/test", handler.MyTest)
 
 	defer mysqlxx.Db.Close() // 注意这行代码要写在上面err判断的下面
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	r.Run(":8000")
-}
-
-// createTodo add a new todo
-func myget(c *gin.Context) {
-	fmt.Println("-------in func myget()-------")
-	c.String(http.StatusOK, "-------in func myget()-------")
-	mysqlxx.Test_mysql()
-}
-
-// createTodo add a new todo
-func mypost(c *gin.Context) {
-	fmt.Println("-------in func myPOST()-------")
-	c.String(http.StatusOK, "-------in func myPOST()-------")
-	//test_db()
-	//mysqlxx.Test_mysql()
-	esxx.Test_es()
-}
-
-// createTodo add a new todo
-func mytest(c *gin.Context) {
-	fmt.Println("-------in func mytest()-------")
-	c.String(http.StatusOK, "-------in func mytest()-------")
-	//test_db()
-	//mysqlxx.Test_mysql()
-	esxx.Es_test()
 }
