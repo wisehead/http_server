@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strconv"
 
 	"github.com/olivere/elastic/v7"
 )
@@ -74,7 +75,11 @@ type Accounts struct {
 	Desc  string `json:"desc,omitempty"`
 }
 
-func Es_search() {
+/*
+Test_case:
+curl -G -d 'sortedType=dataId' -d 'pageNumber=0' -d 'pageSize=100' -d 'searchType=PRODUCT' localhost:8000/search
+*/
+func Es_search(sortedType string, pageNumber string, pageSize string, searchType string) {
 	client, err := elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"))
 	if err != nil {
 		// Handle error
@@ -86,16 +91,24 @@ func Es_search() {
 	ctx := context.Background()
 
 	// 创建term查询条件，用于精确查询
-	//termQuery := elastic.NewTermQuery("description", "nProductId")
+	//termQuery := elastic.NewTermsQuery("dataType", "PRODUCT", "SERVICE")
+	//termsQuery := elastic.NewTermsQuery("Author", "tizi", "tizi365")
+	matchQuery := elastic.NewMatchQuery("dataType", searchType)
+
+	pagenum, _ := strconv.Atoi(pageNumber)
+	pagesize, _ := strconv.Atoi(pageSize)
+	fmt.Printf("sortedType %s\n", sortedType)
 
 	searchResult, err := client.Search().
 		Index("zhb_search_online_db"). // 设置索引名
 		//Query(termQuery).              // 设置查询条件
-		//Sort("createTime", true). // 设置排序字段，根据Created字段升序排序，第二个参数false表示逆序
-		From(0).      // 设置分页参数 - 起始偏移量，从第0行记录开始
-		Size(100).    // 设置分页参数 - 每页大小
-		Pretty(true). // 查询结果返回可读性较好的JSON格式
-		Do(ctx)       // 执行请求
+		Query(matchQuery).      // 设置查询条件
+		Sort(sortedType, true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
+		//Sort("dataId", true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
+		From(pagenum).  // 设置分页参数 - 起始偏移量，从第0行记录开始
+		Size(pagesize). // 设置分页参数 - 每页大小
+		Pretty(true).   // 查询结果返回可读性较好的JSON格式
+		Do(ctx)         // 执行请求
 
 	if err != nil {
 		// Handle error
