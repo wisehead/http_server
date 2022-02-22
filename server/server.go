@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"http_server/esxx"
+	"http_server/handler"
 	"http_server/mysqlxx"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ func main() {
 	r.GET("/xxxpost", myget)
 	r.POST("/xxxpost", mypost)
 	r.PUT("/xxxput", myget)
-	r.GET("/search", mysearch)
+	r.GET("/search", handler.MySearch)
 	r.GET("/test", mytest)
 
 	defer mysqlxx.Db.Close() // 注意这行代码要写在上面err判断的下面
@@ -44,15 +45,6 @@ func mypost(c *gin.Context) {
 	//test_db()
 	//mysqlxx.Test_mysql()
 	esxx.Test_es()
-}
-
-// createTodo add a new todo
-func mysearch(c *gin.Context) {
-	fmt.Println("-------in func mysearch()-------")
-	c.String(http.StatusOK, "-------in func mysearch()-------")
-	//test_db()
-	//mysqlxx.Test_mysql()
-	esxx.Es_search()
 }
 
 // createTodo add a new todo

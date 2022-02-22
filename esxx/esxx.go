@@ -16,6 +16,26 @@ type Person struct {
 	Married bool   `json:"married"`
 }
 
+func Test_es() {
+	client, err := elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"))
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+
+	fmt.Println("connect to es success")
+	p1 := Person{Name: "lmh", Age: 18, Married: false}
+	put1, err := client.Index().
+		Index("user").
+		BodyJson(p1).
+		Do(context.Background())
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	fmt.Printf("Indexed user %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
+}
+
 type Zhb_search_online_db_Item struct {
 	DataID        string `json:"-"` //`json:"dataId,omitempty"`
 	Author        string `json:"author,omitempty"`
@@ -52,26 +72,6 @@ type Accounts struct {
 	User  string `json:"user,omitempty"`
 	Title string `json:"title,omitempty"`
 	Desc  string `json:"desc,omitempty"`
-}
-
-func Test_es() {
-	client, err := elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"))
-	if err != nil {
-		// Handle error
-		panic(err)
-	}
-
-	fmt.Println("connect to es success")
-	p1 := Person{Name: "lmh", Age: 18, Married: false}
-	put1, err := client.Index().
-		Index("user").
-		BodyJson(p1).
-		Do(context.Background())
-	if err != nil {
-		// Handle error
-		panic(err)
-	}
-	fmt.Printf("Indexed user %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
 }
 
 func Es_search() {
