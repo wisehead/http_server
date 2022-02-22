@@ -91,9 +91,27 @@ func Es_search(sortedType string, pageNumber string, pageSize string, searchType
 	ctx := context.Background()
 
 	// 创建term查询条件，用于精确查询
-	termQuery := elastic.NewTermsQuery("dataType", searchType)
+	//termQuery := elastic.NewTermsQuery("dataType", searchType)
 	//termQuery := elastic.NewTermsQuery("dataType", "product", "SERVICE")
 	//matchQuery := elastic.NewMatchQuery("dataType", searchType)
+	multiMatchQuery := elastic.NewMultiMatchQuery("癌症", "title", "content", "summary")
+	/*
+		src, err := q.Source()
+		if err != nil {
+			panic(err)
+		}
+		data, err := json.Marshal(src)
+		if err != nil {
+			fmt.Printf("marshaling to JSON failed: %v", err)
+			panic(err)
+		}
+		got := string(data)
+		expected := `{"multi_match":{"fields":["subject","message"],"query":"this is a test"}}`
+		if got != expected {
+			fmt.Printf("expected\n%s\n,got:\n%s", expected, got)
+			panic(err)
+		}
+	*/
 
 	pagenum, _ := strconv.Atoi(pageNumber)
 	pagesize, _ := strconv.Atoi(pageSize)
@@ -101,8 +119,9 @@ func Es_search(sortedType string, pageNumber string, pageSize string, searchType
 
 	searchResult, err := client.Search().
 		Index("zhb_search_online_db"). // 设置索引名
-		Query(termQuery).              // 设置查询条件
+		//Query(termQuery).              // 设置查询条件
 		//Query(matchQuery).      // 设置查询条件
+		Query(multiMatchQuery). // 设置查询条件
 		Sort(sortedType, true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
 		//Sort("dataId", true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
 		From(pagenum).  // 设置分页参数 - 起始偏移量，从第0行记录开始
