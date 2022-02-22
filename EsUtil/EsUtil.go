@@ -79,7 +79,7 @@ type Accounts struct {
 Test_case:
 curl -G -d 'sortedType=dataId' -d 'pageNumber=0' -d 'pageSize=100' -d 'searchType=PRODUCT' localhost:8000/search
 */
-func Es_search(sortedType string, pageNumber string, pageSize string, searchType string) {
+func Es_search(keyWord string, sortedType string, pageNumber string, pageSize string, searchType string) {
 	client, err := elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"))
 	if err != nil {
 		// Handle error
@@ -91,10 +91,18 @@ func Es_search(sortedType string, pageNumber string, pageSize string, searchType
 	ctx := context.Background()
 
 	// 创建term查询条件，用于精确查询
-	//termQuery := elastic.NewTermsQuery("dataType", searchType)
-	//termQuery := elastic.NewTermsQuery("dataType", "product", "SERVICE")
+	termQuery := elastic.NewTermsQuery("dataType", searchType)
 	//matchQuery := elastic.NewMatchQuery("dataType", searchType)
-	multiMatchQuery := elastic.NewMultiMatchQuery("癌症", "title", "content", "summary")
+	// 创建bool查询
+	boolQuery := elastic.NewBoolQuery().Must()
+
+	if keyWord != "" {
+		multiMatchQuery := elastic.NewMultiMatchQuery(keyWord, "title", "content", "summary")
+		boolQuery.Must(termQuery, multiMatchQuery)
+	} else {
+		matchAllQ := elastic.NewMatchAllQuery()
+		boolQuery.Must(termQuery, matchAllQ)
+	}
 	/*
 		src, err := q.Source()
 		if err != nil {
@@ -121,7 +129,8 @@ func Es_search(sortedType string, pageNumber string, pageSize string, searchType
 		Index("zhb_search_online_db"). // 设置索引名
 		//Query(termQuery).              // 设置查询条件
 		//Query(matchQuery).      // 设置查询条件
-		Query(multiMatchQuery). // 设置查询条件
+		//Query(multiMatchQuery). // 设置查询条件
+		Query(boolQuery).       // 设置查询条件
 		Sort(sortedType, true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
 		//Sort("dataId", true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
 		From(pagenum).  // 设置分页参数 - 起始偏移量，从第0行记录开始
