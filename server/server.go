@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"http_server/MySQLUtil"
 	"http_server/handler"
+	"http_server/mysqlutil"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +24,7 @@ func main() {
 
 	r.GET("/search", handler.MySearch)
 
-	defer MySQLUtil.Db.Close() // 注意这行代码要写在上面err判断的下面
+	defer mysqlutil.Db.Close() // 注意这行代码要写在上面err判断的下面
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	r.Run(":8000")

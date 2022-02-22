@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"http_server/MySQLUtil"
+	"http_server/mysqlutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,5 +12,5 @@ import (
 func MyGet(c *gin.Context) {
 	fmt.Println("-------in func myget()-------")
 	c.String(http.StatusOK, "-------in func myget()-------")
-	MySQLUtil.Test_mysql()
+	mysqlutil.Test_mysql()
 }

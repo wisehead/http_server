@@ -1,4 +1,4 @@
-package EsUtil
+package esutil
 
 import (
 	"context"
@@ -110,18 +110,14 @@ func Es_search() {
 		var b1 Zhb_search_online_db_Item
 		// 通过Each方法，将es结果的json结构转换成struct对象
 		for _, item := range searchResult.Each(reflect.TypeOf(b1)) {
-			// 转换成Article对象
-			/*
-				if t, ok := item.(Zhb_search_online_db_Item); ok {
-					//fmt.Println(t.Title)
-					//fmt.Println(t)
-				}
-			*/
-			t, _ := item.(Zhb_search_online_db_Item)
-			fmt.Println("===============================================")
-			//fmt.Println(item)
-			fmt.Printf("NCode %s, Title: %s\n", t.NCode, t.Title)
-			//fmt.Println(t.NCode)
+			// 转换成Zhb_search_online_db_Item对象
+			if t, ok := item.(Zhb_search_online_db_Item); ok {
+				fmt.Println("===============================================")
+				//fmt.Println(item)
+				fmt.Printf("NCode %s, Title: %s\n", t.NCode, t.Title)
+				//fmt.Println(t.Title)
+				//fmt.Println(t)
+			}
 		}
 	}
 
