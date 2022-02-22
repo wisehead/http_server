@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
+	"http_server/MySQLUtil"
 	"http_server/handler"
-	"http_server/mysqlxx"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,13 +17,14 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "hello World!")
 	})
-	r.GET("/xxxpost", handler.MyGet)
+	r.GET("/xxxget", handler.MyGet)
 	r.POST("/xxxpost", handler.MyPost)
 	r.PUT("/xxxput", handler.MyGet)
-	r.GET("/search", handler.MySearch)
 	r.GET("/test", handler.MyTest)
 
-	defer mysqlxx.Db.Close() // 注意这行代码要写在上面err判断的下面
+	r.GET("/search", handler.MySearch)
+
+	defer MySQLUtil.Db.Close() // 注意这行代码要写在上面err判断的下面
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	r.Run(":8000")

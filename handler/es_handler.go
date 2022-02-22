@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"http_server/esxx"
+	"http_server/EsUtil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +14,7 @@ func MySearch(c *gin.Context) {
 	c.String(http.StatusOK, "-------in func mysearch()-------")
 	//test_db()
 	//mysqlxx.Test_mysql()
-	esxx.Es_search()
+	EsUtil.Es_search()
 }
 
 // createTodo add a new todo
@@ -23,7 +23,7 @@ func MyPost(c *gin.Context) {
 	c.String(http.StatusOK, "-------in func myPOST()-------")
 	//test_db()
 	//mysqlxx.Test_mysql()
-	esxx.Test_es()
+	EsUtil.Test_es()
 }
 
 // createTodo add a new todo
@@ -32,5 +32,5 @@ func MyTest(c *gin.Context) {
 	c.String(http.StatusOK, "-------in func mytest()-------")
 	//test_db()
 	//mysqlxx.Test_mysql()
-	esxx.Es_test()
+	EsUtil.Es_test()
 }
