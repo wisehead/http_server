@@ -91,9 +91,9 @@ func Es_search(sortedType string, pageNumber string, pageSize string, searchType
 	ctx := context.Background()
 
 	// 创建term查询条件，用于精确查询
-	//termQuery := elastic.NewTermsQuery("dataType", "PRODUCT", "SERVICE")
-	//termsQuery := elastic.NewTermsQuery("Author", "tizi", "tizi365")
-	matchQuery := elastic.NewMatchQuery("dataType", searchType)
+	termQuery := elastic.NewTermsQuery("dataType", searchType)
+	//termQuery := elastic.NewTermsQuery("dataType", "product", "SERVICE")
+	//matchQuery := elastic.NewMatchQuery("dataType", searchType)
 
 	pagenum, _ := strconv.Atoi(pageNumber)
 	pagesize, _ := strconv.Atoi(pageSize)
@@ -101,8 +101,8 @@ func Es_search(sortedType string, pageNumber string, pageSize string, searchType
 
 	searchResult, err := client.Search().
 		Index("zhb_search_online_db"). // 设置索引名
-		//Query(termQuery).              // 设置查询条件
-		Query(matchQuery).      // 设置查询条件
+		Query(termQuery).              // 设置查询条件
+		//Query(matchQuery).      // 设置查询条件
 		Sort(sortedType, true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
 		//Sort("dataId", true). // 设置排序字段，根据字段升序排序，第二个参数false表示逆序
 		From(pagenum).  // 设置分页参数 - 起始偏移量，从第0行记录开始
